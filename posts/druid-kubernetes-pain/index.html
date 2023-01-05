@@ -1,0 +1,320 @@
+<!doctype html><html class="not-ready text-sm lg:text-base" style=--bg:#faf6f1 lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><title>Druid Kubernetes Pain - Alex Banks!</title><meta name=theme-color><meta name=description content="Druid? Yes. Kubernetes? Maybe. Networking? Scary. I got the bright idea to try and deploy an Apache Druid (https://druid.apache.org/) cluster to Kubernetes recently. I&rsquo;ve never worked with either technology so I thought it&rsquo;d be fun.
+I was wrong.
+Druid Druid seems great. Understanding the overall model of the software was pretty straightforward. There are a couple node types that each serve a specific purpose in the cluster, some of which being stateful (obviously, it&rsquo;s a database)."><meta name=author content><link rel="preload stylesheet" as=style href=https://abankspdx.github.io/main.min.css><script defer src=https://abankspdx.github.io/highlight.min.js onload=hljs.initHighlightingOnLoad()></script>
+<link rel=preload as=image href=https://abankspdx.github.io/theme.png><link rel=icon href=https://abankspdx.github.io/favicon.ico><link rel=apple-touch-icon href=https://abankspdx.github.io/apple-touch-icon.png><meta name=generator content="Hugo 0.109.0"><meta property="og:title" content="Druid Kubernetes Pain"><meta property="og:description" content="Druid? Yes. Kubernetes? Maybe. Networking? Scary. I got the bright idea to try and deploy an Apache Druid (https://druid.apache.org/) cluster to Kubernetes recently. I&rsquo;ve never worked with either technology so I thought it&rsquo;d be fun.
+I was wrong.
+Druid Druid seems great. Understanding the overall model of the software was pretty straightforward. There are a couple node types that each serve a specific purpose in the cluster, some of which being stateful (obviously, it&rsquo;s a database)."><meta property="og:type" content="article"><meta property="og:url" content="https://abankspdx.github.io/posts/druid-kubernetes-pain/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-10-12T04:09:44-08:00"><meta property="article:modified_time" content="2022-10-12T04:09:44-08:00"><meta itemprop=name content="Druid Kubernetes Pain"><meta itemprop=description content="Druid? Yes. Kubernetes? Maybe. Networking? Scary. I got the bright idea to try and deploy an Apache Druid (https://druid.apache.org/) cluster to Kubernetes recently. I&rsquo;ve never worked with either technology so I thought it&rsquo;d be fun.
+I was wrong.
+Druid Druid seems great. Understanding the overall model of the software was pretty straightforward. There are a couple node types that each serve a specific purpose in the cluster, some of which being stateful (obviously, it&rsquo;s a database)."><meta itemprop=datePublished content="2022-10-12T04:09:44-08:00"><meta itemprop=dateModified content="2022-10-12T04:09:44-08:00"><meta itemprop=wordCount content="1585"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="Druid Kubernetes Pain"><meta name=twitter:description content="Druid? Yes. Kubernetes? Maybe. Networking? Scary. I got the bright idea to try and deploy an Apache Druid (https://druid.apache.org/) cluster to Kubernetes recently. I&rsquo;ve never worked with either technology so I thought it&rsquo;d be fun.
+I was wrong.
+Druid Druid seems great. Understanding the overall model of the software was pretty straightforward. There are a couple node types that each serve a specific purpose in the cluster, some of which being stateful (obviously, it&rsquo;s a database)."></head><body class="text-black duration-200 ease-out dark:text-white"><header class="mx-auto flex h-[5rem] max-w-3xl px-8 lg:justify-center"><div class="relative z-50 mr-auto flex items-center"><a class="-translate-x-[1px] -translate-y-0.5 text-3xl font-bold" href=https://abankspdx.github.io>Alex Banks!</a>
+<a class="btn-dark ml-6 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.png)_left_center/_auto_theme('spacing.6')_no-repeat] [transition:_background-position_0.4s_steps(5)] dark:[background-position:right]"></a></div><a class="btn-menu relative z-50 -mr-8 flex h-[5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"></a>
+<script>const htmlClass=document.documentElement.classList;setTimeout(()=>{htmlClass.remove("not-ready")},10);const btnMenu=document.querySelector(".btn-menu");btnMenu.addEventListener("click",()=>{htmlClass.toggle("open")});const metaTheme=document.querySelector('meta[name="theme-color"]'),lightBg=`"#faf6f1"`.replace(/"/g,""),setDark=e=>{metaTheme.setAttribute("content",e?"#000":lightBg),htmlClass[e?"add":"remove"]("dark"),localStorage.setItem("dark",e)},darkScheme=window.matchMedia("(prefers-color-scheme: dark)");if(htmlClass.contains("dark"))setDark(!0);else{const e=localStorage.getItem("dark");setDark(e?e==="true":darkScheme.matches)}darkScheme.addEventListener("change",e=>{setDark(e.matches)});const btnDark=document.querySelector(".btn-dark");btnDark.addEventListener("click",()=>{setDark(localStorage.getItem("dark")!=="true")})</script><div class="nav-wrapper fixed inset-x-0 top-full z-40 flex h-full select-none flex-col justify-center pb-16 duration-200 dark:bg-black lg:static lg:h-auto lg:flex-row lg:!bg-transparent lg:pb-0 lg:transition-none"><nav class="lg:ml-12 lg:flex lg:flex-row lg:items-center lg:space-x-6"><a class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal" href=/about>About</a></nav></div></header><main class="prose prose-neutral relative mx-auto min-h-[calc(100%-10rem)] max-w-3xl px-8 pt-20 pb-32 dark:prose-invert"><article><header class=mb-20><h1 class="!my-0 pb-2.5">Druid Kubernetes Pain</h1><div class="text-sm opacity-60"><time>Oct 12, 2022</time></div></header><section><h2 id=druid-yes-kubernetes-maybe-networking-scary>Druid? Yes. Kubernetes? Maybe. Networking? Scary.</h2><p>I got the bright idea to try and deploy an Apache Druid (<a href=https://druid.apache.org/>https://druid.apache.org/</a>) cluster to Kubernetes recently. I&rsquo;ve never worked with either technology so I thought it&rsquo;d be fun.</p><p>I was wrong.</p><h2 id=druid>Druid</h2><p>Druid seems great. Understanding the overall model of the software was pretty straightforward. There are a couple node types that each serve a specific purpose in the cluster, some of which being stateful (obviously, it&rsquo;s a database). Like many popular technologies, Druid relies on Zookeeper (<a href=https://zookeeper.apache.org/>https://zookeeper.apache.org/</a>) to maintain cluster configuration/information. This is in theory fine, as Kubernetes&rsquo; guarantee is that &ldquo;Just one more node&rdquo; shouldn&rsquo;t be a problem at all.</p><p>With the Zookeeper node (I opted to only deploy 1, because this is just for fun), that comes to 7 node types.</p><ul><li>Router</li><li>Broker</li><li>Coordinator</li><li>Middle Manager</li><li>Historical</li><li>Postgres</li><li>Zookeeper</li></ul><p>The router was optional, but I really like having a web UI available to me, and since Druid is unfortunately incompatible with both of the database tools I use regularly (TablePlus (<a href=https://tableplus.com/>https://tableplus.com/</a>) and DataGrip (<a href=https://www.jetbrains.com/datagrip/>https://www.jetbrains.com/datagrip/</a>)) I figured it would be extra helpful. After all, it&rsquo;s just one more node, right?</p><h2 id=kubernetes-pain>Kubernetes. Pain.</h2><p>I started learning the basics of Kubernetes. Services. Deployments. StatefulSets. PersistentVolumes (and PersistentVolumeClaims). A lot of new words for Just A Couple Nodes. No worries, lots of resources available online.</p><p>So I started with Zookeeper. This was pretty straight forward. Zookeeper could be run as a standalone node and didn&rsquo;t require any crazy networking, and was stateless, so it went quick.
+Service:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-service.yaml data-lang=service.yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Service</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>zk-cs</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>zk</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>port</span>: <span style=color:#ae81ff>2181</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>zk</span>
+</span></span></code></pre></div><p>Deployment:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-deployment.yaml data-lang=deployment.yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>apps/v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>zk-deployment</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>matchLabels</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>app</span>: <span style=color:#ae81ff>zk</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>replicas</span>: <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>template</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>app</span>: <span style=color:#ae81ff>zk</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>containers</span>:
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>zookeeper</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>image</span>: <span style=color:#ae81ff>zookeeper:3.5</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>env</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>ZOO_MY_ID</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#e6db74>&#34;1&#34;</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>containerPort</span>: <span style=color:#ae81ff>2181</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>resources</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>limits</span>:
+</span></span><span style=display:flex><span>              <span style=color:#f92672>memory</span>: <span style=color:#e6db74>&#34;128Mi&#34;</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>cpu</span>: <span style=color:#e6db74>&#34;500m&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>restartPolicy</span>: <span style=color:#ae81ff>Always</span>
+</span></span></code></pre></div><p>After this, I&rsquo;ve gotten my feet wet. Some <code>kubectl apply -f</code>&rsquo;s and I&rsquo;ve got some stuff going. Pretty nifty.</p><p>Until&mldr;</p><p>I did the exact same thing with the router. A <code>service.yaml</code> and a <code>deployment.yaml</code>. The only differences I could see was the port number, the container config and the number of replicas. I ran 3 instances of the router, just kind of to see if I could, but repeatedly got <code>cannot connect to Zookeeper</code>-type errors.</p><p>I could figure it out. I tried everything. I learned a lot about Kubernetes networking, and getting access to logs, and DNS, but never made any progress.
+Everything I could find on the internet, including a number of reference implementations, suggested that my services should&rsquo;ve worked. After probaly 6 hours I rewrote them both, from scratch, including deployments. <em>Pretty much</em> the same code but not identical. I have to assume it was something name related that I just couldn&rsquo;t see (I&rsquo;d been working on this until probably 5am), because post-rewrite everything worked fine.</p><p>The Router:</p><p>Service:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-service.yaml data-lang=service.yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Service</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>router</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>router</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>port</span>: <span style=color:#ae81ff>8888</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>router</span>
+</span></span></code></pre></div><p>PersistentVolumeClaim:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-persistentvolumeclaim.yaml data-lang=persistentvolumeclaim.yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>PersistentVolumeClaim</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>router</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>accessModes</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#ae81ff>ReadWriteOnce</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>resources</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>requests</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>storage</span>: <span style=color:#ae81ff>100Mi</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>status</span>: {}
+</span></span></code></pre></div><p>Deployment:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-deployment.yaml data-lang=deployment.yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>apps/v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>router</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>strategy</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>type</span>: <span style=color:#ae81ff>RollingUpdate</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>rollingUpdate</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>maxSurge</span>: <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>maxUnavailable</span>: <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>matchLabels</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>app</span>: <span style=color:#ae81ff>druid</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>replicas</span>: <span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>template</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>app</span>: <span style=color:#ae81ff>druid</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>containers</span>:
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>router</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>image</span>: <span style=color:#ae81ff>apache/druid:24.0.2</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>args</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>router</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>env</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>AWS_REGION</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>us-west-2</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>DRUID_LOG4J</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34; ?&gt;&lt;Configuration status=&#34;WARN&#34;&gt;&lt;Appenders&gt;&lt;Console name=&#34;Console&#34; target=&#34;SYSTEM_OUT&#34;&gt;&lt;PatternLayout pattern=&#34;%d{ISO8601} %p [%t] %c - %m%n&#34;/&gt;&lt;/Console&gt;&lt;/Appenders&gt;&lt;Loggers&gt;&lt;Root level=&#34;info&#34;&gt;&lt;AppenderRef ref=&#34;Console&#34;/&gt;&lt;/Root&gt;&lt;Logger name=&#34;org.apache.druid.jetty.RequestLog&#34; additivity=&#34;false&#34; level=&#34;DEBUG&#34;&gt;&lt;AppenderRef ref=&#34;Console&#34;/&gt;&lt;/Logger&gt;&lt;/Loggers&gt;&lt;/Configuration&gt;</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>DRUID_SINGLE_NODE_CONF</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>micro-quickstart</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_coordinator_balancer_strategy</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>cachingCost</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_emitter_logging_logLevel</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>debug</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_extensions_loadList</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#e6db74>&#39;[&#34;druid-histogram&#34;, &#34;druid-datasketches&#34;, &#34;druid-lookups-cached-global&#34;, &#34;postgresql-metadata-storage&#34;, &#34;druid-multi-stage-query&#34;, &#34;druid-s3-extensions&#34;, &#34;druid-parquet-extensions&#34;]&#39;</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_indexer_fork_property_druid_processing_buffer_sizeBytes</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>256MiB</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_indexer_logs_directory</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>/opt/shared/indexing-logs</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_indexer_logs_type</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>file</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_indexer_runner_javaOptsArray</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#e6db74>&#39;[&#34;-server&#34;, &#34;-Xmx1g&#34;, &#34;-Xms1g&#34;, &#34;-XX:MaxDirectMemorySize=3g&#34;, &#34;-Duser.timezone=UTC&#34;, &#34;-Dfile.encoding=UTF-8&#34;, &#34;-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager&#34;, &#34;-Daws.region=us-west-2&#34;]&#39;</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_metadata_storage_connector_connectURI</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>jdbc:postgresql://postgres.druid.svc.cluster.local:5432/druid</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_metadata_storage_connector_password</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>FoolishPassword</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_metadata_storage_connector_user</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>druid</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_metadata_storage_host</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_metadata_storage_type</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>postgresql</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_processing_numMergeBuffers</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#e6db74>&#34;2&#34;</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_processing_numThreads</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#e6db74>&#34;2&#34;</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_storage_storageDirectory</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>/opt/shared/segments</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_storage_type</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>local</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_zk_service_host</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>zk-cs.druid.svc.cluster.local</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>containerPort</span>: <span style=color:#ae81ff>8888</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>volumeMounts</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>mountPath</span>: <span style=color:#ae81ff>/opt/druid/var</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>name</span>: <span style=color:#ae81ff>router</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>resources</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>limits</span>:
+</span></span><span style=display:flex><span>              <span style=color:#f92672>memory</span>: <span style=color:#e6db74>&#34;512Mi&#34;</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>cpu</span>: <span style=color:#e6db74>&#34;500m&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>restartPolicy</span>: <span style=color:#ae81ff>Always</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>volumes</span>:
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>router</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>persistentVolumeClaim</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>claimName</span>: <span style=color:#ae81ff>router</span>
+</span></span></code></pre></div><p>To my job, after running the deployment and the pods becoming accessible, I saw:</p><pre tabindex=0><code>2023-01-05T01:06:35,500 INFO [main-SendThread(zk-cs.druid.svc.cluster.local:2181)] org.apache.zookeeper.ClientCnxn - Socket connection established, initiating session, client: /172.17.0.16:57282, server: zk-cs.druid.svc.cluster.local/10.99.26.238:2181
+2023-01-05T01:06:35,859 INFO [main-SendThread(zk-cs.druid.svc.cluster.local:2181)] org.apache.zookeeper.ClientCnxn - Session establishment complete on server zk-cs.druid.svc.cluster.local/10.99.26.238:2181, sessionid = 0x10000372dd80008, negotiated timeout = 30000
+</code></pre><p>Huzzah! The router could communicate with Zookeeper!</p><h2 id=postgres>Postgres</h2><p>I&rsquo;d forgotten (it had been like 20 hours of debugging over 2 days at this point) that I needed to deploy Postgres for any of this to work. Luckily postgres could be a single node, and there were dozens of reference impls online for running Postgres from Kubernetes. The only new thing I found was creating <code>PersistentVolume</code> separate from <code>PersistentVolumeClaim</code> which, maybe I just don&rsquo;t understand but, certainly seem like they could be a single yaml file.</p><p>Anyway.</p><p>Service:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-service.yaml data-lang=service.yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Service</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>postgres</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>postgres</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>port</span>: <span style=color:#ae81ff>5432</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>postgres</span>
+</span></span></code></pre></div><p>PV:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-pv.yaml data-lang=pv.yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>PersistentVolume</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>postgres-pv-volume</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>type</span>: <span style=color:#ae81ff>local</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>storageClassName</span>: <span style=color:#ae81ff>manual</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>capacity</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>storage</span>: <span style=color:#ae81ff>1Gi</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>accessModes</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#ae81ff>ReadWriteOnce  </span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>hostPath</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>path</span>: <span style=color:#e6db74>&#34;/mnt/data&#34;</span>
+</span></span></code></pre></div><p>PVC:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-pvc.yaml data-lang=pvc.yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>PersistentVolumeClaim</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>postgres-pv-claim</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>storageClassName</span>: <span style=color:#ae81ff>manual</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>accessModes</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#ae81ff>ReadWriteOnce</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>resources</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>requests</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>storage</span>: <span style=color:#ae81ff>1Gi</span>
+</span></span></code></pre></div><p>Deployment:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-deployment.yaml data-lang=deployment.yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>apps/v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>postgres</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>replicas</span>: <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>matchLabels</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>app</span>: <span style=color:#ae81ff>postgres</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>template</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>app</span>: <span style=color:#ae81ff>postgres</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>volumes</span>:
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>postgres-pv-storage</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>persistentVolumeClaim</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>claimName</span>: <span style=color:#ae81ff>postgres-pv-claim</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>containers</span>:
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>postgres</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>image</span>: <span style=color:#ae81ff>postgres:11</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>imagePullPolicy</span>: <span style=color:#ae81ff>IfNotPresent</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>containerPort</span>: <span style=color:#ae81ff>5432</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>env</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>POSTGRES_PASSWORD</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>FoolishPassword</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>POSTGRES_USER</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>druid</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>POSTGRES_DB</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>druid</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>PGDATA</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>/var/lib/postgresql/data/pgdata</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>volumeMounts</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>mountPath</span>: <span style=color:#ae81ff>/var/lib/postgresql/data</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>name</span>: <span style=color:#ae81ff>postgres-pv-storage</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>resources</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>limits</span>:
+</span></span><span style=display:flex><span>              <span style=color:#f92672>memory</span>: <span style=color:#e6db74>&#34;512Mi&#34;</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>cpu</span>: <span style=color:#e6db74>&#34;500m&#34;</span>
+</span></span></code></pre></div><p>I remembered to match the Postgres env vars that I&rsquo;d configured in Druid config, back to the configuration for Postgres I used in the deployment (specifically the DB/user/password). Things started up normally and seemed fine.</p><h2 id=kubernetes-but-with-significantly-less-pain>Kubernetes, but with significantly less pain</h2><p>Okay so, I&rsquo;d deployed two services and they could communicate. The rest should be mostly copy and paste, right? The only hiccup would be that Historical and MiddleManager nodes need to be StatefulSets instead of Deployments. Please be easy.</p><p>So after deploying almost-identical service and deployments for the Coordinator and the Broker, it was time to take a shot at the Historical node. I read a bunch about StatefulSets and gave it a whirl.</p><p>Service:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-service.yaml data-lang=service.yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Service</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>historical</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>historical</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>port</span>: <span style=color:#ae81ff>8083</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>historical</span>
+</span></span></code></pre></div><p>StatefulSet:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-statefulset.yaml data-lang=statefulset.yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>apps/v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>StatefulSet</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>historical</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>druid</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>serviceName</span>: <span style=color:#ae81ff>historical</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>replicas</span>: <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>matchLabels</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>app</span>: <span style=color:#ae81ff>druid</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>template</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>app</span>: <span style=color:#ae81ff>druid</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>volumes</span>:
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid-shared</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>emptyDir</span>: {}
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>historical-var</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>emptyDir</span>: {}
+</span></span><span style=display:flex><span>      <span style=color:#f92672>containers</span>:
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>historical</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>image</span>: <span style=color:#ae81ff>apache/druid:24.0.2</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>args</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>historical</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>containerPort</span>: <span style=color:#ae81ff>8083</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>volumeMounts</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>mountPath</span>: <span style=color:#ae81ff>/opt/shared</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid-shared</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>mountPath</span>: <span style=color:#ae81ff>/opt/druid/var</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>name</span>: <span style=color:#ae81ff>historical-var</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>env</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>AWS_REGION</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>us-west-2</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>DRUID_LOG4J</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34; ?&gt;&lt;Configuration status=&#34;WARN&#34;&gt;&lt;Appenders&gt;&lt;Console name=&#34;Console&#34; target=&#34;SYSTEM_OUT&#34;&gt;&lt;PatternLayout pattern=&#34;%d{ISO8601} %p [%t] %c - %m%n&#34;/&gt;&lt;/Console&gt;&lt;/Appenders&gt;&lt;Loggers&gt;&lt;Root level=&#34;info&#34;&gt;&lt;AppenderRef ref=&#34;Console&#34;/&gt;&lt;/Root&gt;&lt;Logger name=&#34;org.apache.druid.jetty.RequestLog&#34; additivity=&#34;false&#34; level=&#34;DEBUG&#34;&gt;&lt;AppenderRef ref=&#34;Console&#34;/&gt;&lt;/Logger&gt;&lt;/Loggers&gt;&lt;/Configuration&gt;</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>DRUID_SINGLE_NODE_CONF</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>micro-quickstart</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_coordinator_balancer_strategy</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>cachingCost</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_emitter_logging_logLevel</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>debug</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_extensions_loadList</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#e6db74>&#39;[&#34;druid-histogram&#34;, &#34;druid-datasketches&#34;, &#34;druid-lookups-cached-global&#34;, &#34;postgresql-metadata-storage&#34;, &#34;druid-multi-stage-query&#34;, &#34;druid-s3-extensions&#34;, &#34;druid-parquet-extensions&#34;]&#39;</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_indexer_fork_property_druid_processing_buffer_sizeBytes</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>256MiB</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_indexer_logs_directory</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>/opt/shared/indexing-logs</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_indexer_logs_type</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>file</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_indexer_runner_javaOptsArray</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#e6db74>&#39;[&#34;-server&#34;, &#34;-Xmx1g&#34;, &#34;-Xms1g&#34;, &#34;-XX:MaxDirectMemorySize=3g&#34;, &#34;-Duser.timezone=UTC&#34;, &#34;-Dfile.encoding=UTF-8&#34;, &#34;-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager&#34;, &#34;-Daws.region=us-west-2&#34;]&#39;</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_metadata_storage_connector_connectURI</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>jdbc:postgresql://postgres.druid.svc.cluster.local:5432/druid</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_metadata_storage_connector_password</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>FoolishPassword</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_metadata_storage_connector_user</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>druid</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_metadata_storage_host</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_metadata_storage_type</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>postgresql</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_processing_numMergeBuffers</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#e6db74>&#34;2&#34;</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_processing_numThreads</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#e6db74>&#34;2&#34;</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_storage_storageDirectory</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>/opt/shared/segments</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_storage_type</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>local</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>druid_zk_service_host</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: <span style=color:#ae81ff>zk-cs.druid.svc.cluster.local</span>
+</span></span></code></pre></div><p>After a <code>kubectl apply -f</code> for the Service and the StatefulSet, everything looked great!</p><pre tabindex=0><code>2023-01-05T01:06:22,538 INFO [main-SendThread(zk-cs.druid.svc.cluster.local:2181)] org.apache.zookeeper.ClientCnxn - Opening socket connection to server zk-cs.druid.svc.cluster.local/10.99.26.238:2181. Will not attempt to authenticate using SASL (unknown error)
+2023-01-05T01:06:22,552 INFO [main-SendThread(zk-cs.druid.svc.cluster.local:2181)] org.apache.zookeeper.ClientCnxn - Socket connection established, initiating session, client: /172.17.0.14:43664, server: zk-cs.druid.svc.cluster.local/10.99.26.238:2181
+2023-01-05T01:06:22,564 INFO [main-SendThread(zk-cs.druid.svc.cluster.local:2181)] org.apache.zookeeper.ClientCnxn - Session establishment complete on server zk-cs.druid.svc.cluster.local/10.99.26.238:2181, sessionid = 0x10000372dd80004, negotiated timeout = 30000
+</code></pre><p>!!</p><p>Seems like we&rsquo;re in business.</p><p>At this point, I could also see the nodes showing up in the Druid UI (after learning about <code>kubectl port-forward</code> to be able to use the Router from outside the Kubernetes network)</p><p>From here I basically copied and pasted the service and statefulset yaml from the historical, and changed the word <code>historical</code> to <code>middelmanager</code> and was done. When I finally saw:</p><p><img src=https://imgur.com/a/NgEpcnW alt=image></p><p>I was HYPE. Also, Druid Doctor is a great tool (that I learned about much too late in this process)</p><h2 id=closing-thoughts>Closing Thoughts</h2><p>This process took entirely too long. I learned enough about Kubernetes to feel frustrated by my experience and didn&rsquo;t really learn enough about Druid itself, just its deployment strategy and architecture. Soon I&rsquo;ll be dumping a whole bunch of NBA data into this cluster (after maybe deploying it to Digital Ocean?) to play around with. We&rsquo;ll see. I feel proud that I completed it, even if I think it should&rsquo;ve been easier.</p><p>Also, it is totally unclear to me why the Druid nodes needed to be StatefulSets when Postgres is also stateful (maybe the most stateful?) and was done via Deployment? I followed the guides I saw online, but I still do not understand.</p><p>Anyway, if you made it this far, thanks for reading!</p></section><nav class="mt-24 flex rounded-lg bg-black/[3%] p-1.5 text-lg dark:bg-white/[8%]"><a class="ml-auto flex w-1/2 items-center justify-end rounded-md p-6 pl-3 no-underline hover:bg-black/[2%]" href=https://abankspdx.github.io/posts/fivetran-dbt-adventure/><span>Fivetran Dbt Adventure</span><span class=ml-1.5>→</span></a></nav></article></main><footer class="opaco mx-auto flex h-[5rem] max-w-3xl items-center px-8 text-[0.9em] opacity-60"><div class=mr-auto>&copy; 2023
+<a class=link href=https://abankspdx.github.io>Alex Banks!</a></div><a class="link mx-6" href=https://gohugo.io/ rel=noopener target=_blank>Powered by Hugo️️</a>️
+<a class=link href=https://github.com/nanxiaobei/hugo-paper rel=noopener target=_blank>▷ Paper 6</a></footer></body></html>
