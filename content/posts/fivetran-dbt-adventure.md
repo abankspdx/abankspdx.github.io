@@ -1,7 +1,7 @@
 ---
 title: "Fivetran Dbt Adventure"
-date: 2022-06-04T16:26:48-08:00
-draft: true
+date: 2023-01-02T16:26:48-08:00
+draft: false
 ---
 
 ## A real adventure

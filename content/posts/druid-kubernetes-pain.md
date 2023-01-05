@@ -1,7 +1,7 @@
 ---
 title: "Druid Kubernetes Pain"
-date: 2022-10-12T4:09:44-08:00
-draft: true
+date: 2023-01-04T4:09:44-08:00
+draft: false
 ---
 
 ## Druid? Yes. Kubernetes? Maybe. Networking? Scary.
@@ -426,7 +426,7 @@ At this point, I could also see the nodes showing up in the Druid UI (after lear
 
 From here I basically copied and pasted the service and statefulset yaml from the historical, and changed the word `historical` to `middelmanager` and was done. When I finally saw:
 
-![image](https://imgur.com/a/NgEpcnW)
+![image](https://abankspdx.github.io/druid.png)
 
 I was HYPE. Also, Druid Doctor is a great tool (that I learned about much too late in this process)
 
