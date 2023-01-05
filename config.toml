@@ -1,0 +1,14 @@
+baseURL = 'https://abankspdx.github.io'
+languageCode = 'en-us'
+title = 'Alex Banks!'
+theme = 'paper'
+
+
+
+[menu]
+
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about"
+    weight = 10
