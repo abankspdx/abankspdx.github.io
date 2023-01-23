@@ -1,0 +1,81 @@
+<!doctype html><html class="not-ready text-sm lg:text-base" style=--bg:#faf6f1 lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><title>Trie - Alex Banks!</title><meta name=theme-color><meta name=description content="Tries, the Word Search Data Structure! A bunch of years ago I learned about Tries. I thought they were pretty nifty! Today I decided to write about them.
+What&rsquo;s a trie? In essence, a Trie is a data structure comprized of a bunch of nested Maps/Dictionaries. So, if you enter &ldquo;alex&rdquo; into a Trie, your internal structure looks like this:
+{ &#34;a&#34;: { &#34;l&#34;: { &#34;e&#34;: { &#34;x&#34;: {} } } } } To better demonstrate, if we added &ldquo;alan&rdquo; to that same Trie, the underlying data structure would look like:"><meta name=author content><link rel="preload stylesheet" as=style href=https://abankspdx.github.io/main.min.css><script defer src=https://abankspdx.github.io/highlight.min.js onload=hljs.initHighlightingOnLoad()></script>
+<link rel=preload as=image href=https://abankspdx.github.io/theme.png><link rel=icon href=https://abankspdx.github.io/favicon.ico><link rel=apple-touch-icon href=https://abankspdx.github.io/apple-touch-icon.png><meta name=generator content="Hugo 0.110.0"><meta property="og:title" content="Trie"><meta property="og:description" content="Tries, the Word Search Data Structure! A bunch of years ago I learned about Tries. I thought they were pretty nifty! Today I decided to write about them.
+What&rsquo;s a trie? In essence, a Trie is a data structure comprized of a bunch of nested Maps/Dictionaries. So, if you enter &ldquo;alex&rdquo; into a Trie, your internal structure looks like this:
+{ &#34;a&#34;: { &#34;l&#34;: { &#34;e&#34;: { &#34;x&#34;: {} } } } } To better demonstrate, if we added &ldquo;alan&rdquo; to that same Trie, the underlying data structure would look like:"><meta property="og:type" content="article"><meta property="og:url" content="https://abankspdx.github.io/posts/trie/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-01-22T16:23:50-08:00"><meta property="article:modified_time" content="2023-01-22T16:23:50-08:00"><meta itemprop=name content="Trie"><meta itemprop=description content="Tries, the Word Search Data Structure! A bunch of years ago I learned about Tries. I thought they were pretty nifty! Today I decided to write about them.
+What&rsquo;s a trie? In essence, a Trie is a data structure comprized of a bunch of nested Maps/Dictionaries. So, if you enter &ldquo;alex&rdquo; into a Trie, your internal structure looks like this:
+{ &#34;a&#34;: { &#34;l&#34;: { &#34;e&#34;: { &#34;x&#34;: {} } } } } To better demonstrate, if we added &ldquo;alan&rdquo; to that same Trie, the underlying data structure would look like:"><meta itemprop=datePublished content="2023-01-22T16:23:50-08:00"><meta itemprop=dateModified content="2023-01-22T16:23:50-08:00"><meta itemprop=wordCount content="268"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="Trie"><meta name=twitter:description content="Tries, the Word Search Data Structure! A bunch of years ago I learned about Tries. I thought they were pretty nifty! Today I decided to write about them.
+What&rsquo;s a trie? In essence, a Trie is a data structure comprized of a bunch of nested Maps/Dictionaries. So, if you enter &ldquo;alex&rdquo; into a Trie, your internal structure looks like this:
+{ &#34;a&#34;: { &#34;l&#34;: { &#34;e&#34;: { &#34;x&#34;: {} } } } } To better demonstrate, if we added &ldquo;alan&rdquo; to that same Trie, the underlying data structure would look like:"></head><body class="text-black duration-200 ease-out dark:text-white"><header class="mx-auto flex h-[5rem] max-w-3xl px-8 lg:justify-center"><div class="relative z-50 mr-auto flex items-center"><a class="-translate-x-[1px] -translate-y-0.5 text-3xl font-bold" href=https://abankspdx.github.io>Alex Banks!</a>
+<a class="btn-dark ml-6 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.png)_left_center/_auto_theme('spacing.6')_no-repeat] [transition:_background-position_0.4s_steps(5)] dark:[background-position:right]"></a></div><a class="btn-menu relative z-50 -mr-8 flex h-[5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"></a>
+<script>const htmlClass=document.documentElement.classList;setTimeout(()=>{htmlClass.remove("not-ready")},10);const btnMenu=document.querySelector(".btn-menu");btnMenu.addEventListener("click",()=>{htmlClass.toggle("open")});const metaTheme=document.querySelector('meta[name="theme-color"]'),lightBg=`"#faf6f1"`.replace(/"/g,""),setDark=e=>{metaTheme.setAttribute("content",e?"#000":lightBg),htmlClass[e?"add":"remove"]("dark"),localStorage.setItem("dark",e)},darkScheme=window.matchMedia("(prefers-color-scheme: dark)");if(htmlClass.contains("dark"))setDark(!0);else{const e=localStorage.getItem("dark");setDark(e?e==="true":darkScheme.matches)}darkScheme.addEventListener("change",e=>{setDark(e.matches)});const btnDark=document.querySelector(".btn-dark");btnDark.addEventListener("click",()=>{setDark(localStorage.getItem("dark")!=="true")})</script><div class="nav-wrapper fixed inset-x-0 top-full z-40 flex h-full select-none flex-col justify-center pb-16 duration-200 dark:bg-black lg:static lg:h-auto lg:flex-row lg:!bg-transparent lg:pb-0 lg:transition-none"><nav class="lg:ml-12 lg:flex lg:flex-row lg:items-center lg:space-x-6"><a class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal" href=/about>About</a></nav></div></header><main class="prose prose-neutral relative mx-auto min-h-[calc(100%-10rem)] max-w-3xl px-8 pt-20 pb-32 dark:prose-invert"><article><header class=mb-20><h1 class="!my-0 pb-2.5">Trie</h1><div class="text-sm opacity-60"><time>Jan 22, 2023</time></div></header><section><h1 id=tries-the-word-search-data-structure>Tries, the Word Search Data Structure!</h1><p>A bunch of years ago I learned about Tries. I thought they were pretty nifty! Today I decided to write about them.</p><h3 id=whats-a-trie>What&rsquo;s a trie?</h3><p>In essence, a Trie is a data structure comprized of a bunch of nested Maps/Dictionaries. So, if you enter &ldquo;alex&rdquo; into a Trie, your internal structure looks like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{ <span style=color:#f92672>&#34;a&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;l&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;e&#34;</span>: {
+</span></span><span style=display:flex><span>            <span style=color:#f92672>&#34;x&#34;</span>: {}
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>To better demonstrate, if we added &ldquo;alan&rdquo; to that same Trie, the underlying data structure would look like:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;a&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;l&#34;</span>: {
+</span></span><span style=display:flex><span>            <span style=color:#f92672>&#34;e&#34;</span>: {
+</span></span><span style=display:flex><span>                <span style=color:#f92672>&#34;x&#34;</span>: {}
+</span></span><span style=display:flex><span>            },
+</span></span><span style=display:flex><span>            <span style=color:#f92672>&#34;a&#34;</span>: {
+</span></span><span style=display:flex><span>                <span style=color:#f92672>&#34;n&#34;</span>: {}
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The power in this is that, both search and insert are O(n) time complexity. Very performant!</p><h3 id=but-how>But how?</h3><p>I whipped up a quick Trie in Python to give a better representation of how it works. The code is:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>Build a Trie
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> typing <span style=color:#f92672>import</span> Dict
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> pytest
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Trie</span>:
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;A class implementing a Trie&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    store: Dict
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> __init__(self) <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>store <span style=color:#f92672>=</span> {}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>insert</span>(self, word: str) <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;&#34;&#34;Insert a word into the trie&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        level <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>store
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> char <span style=color:#f92672>in</span> word:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> char <span style=color:#f92672>not</span> <span style=color:#f92672>in</span> level:
+</span></span><span style=display:flex><span>                level[char] <span style=color:#f92672>=</span> {}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            level <span style=color:#f92672>=</span> level[char]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>search</span>(self, word: str) <span style=color:#f92672>-&gt;</span> bool:
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;&#34;&#34;Search the trie for a given word&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        level <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>store
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> char <span style=color:#f92672>in</span> word:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> char <span style=color:#f92672>in</span> level:
+</span></span><span style=display:flex><span>                level <span style=color:#f92672>=</span> level[char]
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@pytest.mark.parametrize</span>(<span style=color:#e6db74>&#34;word&#34;</span>, [<span style=color:#e6db74>&#34;alex&#34;</span>, <span style=color:#e6db74>&#34;aaaa&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>, <span style=color:#e6db74>&#34;trie&#34;</span>])
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>test_trie</span>(word: str):
+</span></span><span style=display:flex><span>    t <span style=color:#f92672>=</span> Trie()
+</span></span><span style=display:flex><span>    t<span style=color:#f92672>.</span>insert(word)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> t<span style=color:#f92672>.</span>search(word)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@pytest.mark.parametrize</span>(<span style=color:#e6db74>&#34;word&#34;</span>, [<span style=color:#e6db74>&#34;banks&#34;</span>])
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>test_not_found</span>(word: str):
+</span></span><span style=display:flex><span>    j <span style=color:#f92672>=</span> Trie()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> j<span style=color:#f92672>.</span>search(word) <span style=color:#f92672>==</span> <span style=color:#66d9ef>False</span>
+</span></span></code></pre></div><h3 id=conclusion>Conclusion</h3><p>That&rsquo;s pretty much it! Enjoy!</p></section><nav class="mt-24 flex rounded-lg bg-black/[3%] p-1.5 text-lg dark:bg-white/[8%]"><a class="ml-auto flex w-1/2 items-center justify-end rounded-md p-6 pl-3 no-underline hover:bg-black/[2%]" href=https://abankspdx.github.io/posts/python-codat-sync/><span>Python Codat Sync</span><span class=ml-1.5>→</span></a></nav></article></main><footer class="opaco mx-auto flex h-[5rem] max-w-3xl items-center px-8 text-[0.9em] opacity-60"><div class=mr-auto>&copy; 2023
+<a class=link href=https://abankspdx.github.io>Alex Banks!</a></div><a class="link mx-6" href=https://gohugo.io/ rel=noopener target=_blank>Powered by Hugo️️</a>️
+<a class=link href=https://github.com/nanxiaobei/hugo-paper rel=noopener target=_blank>▷ Paper 6</a></footer></body></html>
